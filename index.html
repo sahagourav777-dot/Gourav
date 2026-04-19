@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gourav's Game 😎</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      text-align: center;
+      font-family: Arial;
+      background: #f4f4f4;
+    }
+    canvas {
+      border: 2px solid black;
+      background: white;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🔥 Gourav Kumar Saha Game 🔥</h2>
+<p>Press SPACE to Jump</p>
+<p>Score: <span id="score">0</span></p>
+
+<canvas id="game" width="600" height="200"></canvas>
+
+<script>
+let canvas = document.getElementById("game");
+let ctx = canvas.getContext("2d");
+
+let player = {x:50, y:150, w:20, h:20, vy:0};
+let obstacle = {x:600, y:150, w:20, h:20};
+let gravity = 1;
+let score = 0;
+
+// jump control
+document.addEventListener("keydown", e => {
+  if(e.code === "Space" && player.y === 150){
+    player.vy = -12;
+  }
+});
+
+function update(){
+  ctx.clearRect(0,0,600,200);
+
+  // 🔥 WATERMARK
+  ctx.save();
+  ctx.globalAlpha = 0.15;
+  ctx.font = "28px Arial";
+  ctx.fillStyle = "gray";
+  ctx.fillText("Gourav Kumar Saha", 110, 100);
+  ctx.restore();
+
+  // player physics
+  player.vy += gravity;
+  player.y += player.vy;
+  if(player.y > 150){
+    player.y = 150;
+    player.vy = 0;
+  }
+
+  // obstacle movement
+  obstacle.x -= 6;
+  if(obstacle.x < 0){
+    obstacle.x = 600;
+    score++;
+    document.getElementById("score").innerText = score;
+  }
+
+  // draw player
+  ctx.fillStyle = "black";
+  ctx.fillRect(player.x, player.y, player.w, player.h);
+
+  // draw obstacle
+  ctx.fillStyle = "red";
+  ctx.fillRect(obstacle.x, obstacle.y, obstacle.w, obstacle.h);
+
+  // collision detection
+  if(player.x < obstacle.x + obstacle.w &&
+     player.x + player.w > obstacle.x &&
+     player.y < obstacle.y + obstacle.h &&
+     player.y + player.h > obstacle.y){
+    alert("Game Over! Score: " + score);
+    location.reload();
+  }
+
+  requestAnimationFrame(update);
+}
+
+update();
+</script>
+
+</body>
+</html>
